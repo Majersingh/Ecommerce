@@ -114,7 +114,7 @@ function Searchsuggestion() {
           <Link to={'/'}>
            <i className="fa-brands fa-shopify fa-xl ml-4"></i>
           </Link> 
-          <div className="w-[80vw] lg:[95vw] flex justify-end">
+          <div className="w-[75vw] lg:[95vw] flex justify-end">
             <Link to={'/search'} className="pl-4 text-center">
             <i className="fa-solid fa-magnifying-glass fa-lg"></i>
             </Link> 
