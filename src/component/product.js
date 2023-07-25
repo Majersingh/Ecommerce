@@ -13,7 +13,7 @@ const ProductDescription = () => {
 //   console.log('requiredItemid:', desiredItem , "n",newItem.includes(desiredItem) , newItem[0]);
 
   useEffect(() => {
-    var temp=newItem.find((obj) => obj.i_d === parseInt(requiredItemid)); // this to check if item already is available in cart or not
+    var temp=newItem.find((obj) => obj._id === parseInt(requiredItemid)); // this to check if item already is available in cart or not
     if(temp)
     setDesiredItem(temp);
     else
