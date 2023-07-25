@@ -84,7 +84,7 @@ function Searchsuggestion() {
       setItems(similarProducts);
     }
     else  {
-      console.log("exact Product not found!");
+      console.log("Please search relevant");
     }
   },[intent ,allItems , location.state.q]);
   

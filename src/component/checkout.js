@@ -46,23 +46,12 @@ function Checkout() {
     <div className="flex flex-col min-h-screen bg-slate-100">
       <div className="fixed w-full shadow-xl flex items-center justify-between bg-slate-300 p-4">
         <i className="fa-solid fa-arrow-left fa-xl" onClick={()=>{navigate(-1)}}></i>
-        <p>order summary</p>
+        <p>Order summary</p>
         <p className="">Step 2/3</p>
       </div>
-
       <br/>
       <br/>
-
-      <div className=" p-4 m-4 rounded-lg shadow-md">
-        <h2 className="text-base font-bold">Shipping Address:   
-          <button className="w-12  ml-2 bg-white border rounded-lg p-1 text-sm font-medium shadow-l text-[#5e11c2]" onClick={()=>setisTochangeAddress(true)}>
-              Edit
-          </button>
-          {isTochangeaddress ?<Address setAddress={setAddress}  setisTochangeaddress={setisTochangeAddress}/>:<></>}
-        </h2>
-        <p className="leading-tight">{address.addressLine1} , {address.city ?address.pincode +","+address.city+","+address.state:"" }</p>
-       </div>
-
+      <br/>
       <div className="flex flex-col space-y-4 p-4 flex-grow">
         {cartItems.map((item) => (
           <CartItem
@@ -74,8 +63,19 @@ function Checkout() {
             }
           />
         ))}
-        
-        <div className="flex justify-center p-4">
+
+        <br/>
+        <div className=" p-2 rounded-lg shadow-md">
+          <h2 className="text-base font-bold">Shipping Address:   
+            <button className="w-12  ml-2 bg-white border rounded-lg p-1 text-sm font-medium shadow-l text-[#5e11c2]" onClick={()=>setisTochangeAddress(true)}>
+                Edit
+            </button>
+            {isTochangeaddress ?<Address setAddress={setAddress}  setisTochangeaddress={setisTochangeAddress}/>:<></>}
+          </h2>
+          <p className="leading-tight">{address.addressLine1} , {address.city ?address.pincode +","+address.city+","+address.state:"" }</p>
+        </div>
+
+        <div className="flex justify-center p-2">
           <div className="w-full divide-y">
             <div className="flex justify-between mb-2">
               <span className="text-black">Subtotal:</span>

@@ -41,10 +41,9 @@ const Login = () => {
         await updateUser({email:email});
         updateCartafterlogin(email);
       }
-      
-  
-    } catch (error) {
-      console.log('Error: server crash ', error);
+    } 
+    catch (error) {
+      console.log('Error: To handle login submit', error);
     }
   }    
  if(isAuthenticated)

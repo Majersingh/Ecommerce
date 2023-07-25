@@ -146,7 +146,7 @@ export const UserContext = createContext();
       }
 
     } catch (error) {
-      console.error('Error: server crash or stopped', error);
+      console.error('Error: to Check Authentication', error);
       return false;
     }
   }
@@ -164,7 +164,7 @@ export const UserContext = createContext();
       console.log('updated cart :' ,response.ok , newItem );
     } 
     catch (error) {
-      console.error('Error: server crash or stopped', error);
+      console.error('Error: to Post Cart', error);
     }
   }
 
@@ -188,7 +188,7 @@ export const UserContext = createContext();
       }
 
     } catch (error) {
-      console.error('Error: server crash or stopped', error);
+      console.error('Error: to Get User Function', error);
       return false;
     }
   }
