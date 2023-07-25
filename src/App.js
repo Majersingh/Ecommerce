@@ -54,10 +54,18 @@ export const UserContext = createContext();
     }
   };
 
-  const updateCartafterlogin =  async (email) => {  //this to get if alredy anything in cart of db just sfter loggin without any refresh
+  const updateCartafterlogin =  async (email) => {  //this to get if alredy anything in cart   of db , if any  then bring to client from server and also sent to server from client and checking to not add duplicate agter login
    var temp= await getUser(email , apiUrl);
-   if(temp)
-   addTocart([...newItem , ...temp.cart]);
+   if(isAuthenticated)
+   {
+    for (let obj of temp.cart) {
+      if (!newItem.some((item) => JSON.stringify(item) === JSON.stringify(obj))) {
+        newItem.push(obj);
+      }
+    }
+    addTocart([...newItem]);
+   }
+   postCart({eamal: email} ,newItem,apiUrl);
   }
   const updateCartitemquantity =  async () => {  
    await postCart(user , [] , apiUrl);//this to  first clear cart 
@@ -132,7 +140,7 @@ export const UserContext = createContext();
       { tempUser = await response.json(); //retrieving email and other data of user from jwt token
         console.log('Server Response isLoggedIn:',response.ok);
         updateUser(tempUser);
-        const tempUserdata = await getUser(tempUser.email , apiUrl);//only getting email
+        const tempUserdata = await getUser(tempUser.email , apiUrl);
         addTocart([...tempUserdata.cart]);
         return true;
       }
