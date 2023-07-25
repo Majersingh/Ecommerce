@@ -55,17 +55,17 @@ export const UserContext = createContext();
   };
 
   const updateCartafterlogin =  async (email) => {  //this to get if alredy anything in cart   of db , if any  then bring to client from server and also sent to server from client and checking to not add duplicate agter login
-   var temp= await getUser(email , apiUrl);
-   if(isAuthenticated)
-   {
-    for (let obj of temp.cart) {
-      if (!newItem.some((item) => JSON.stringify(item) === JSON.stringify(obj))) {
-        newItem.push(obj);
+    var temp= await getUser(email , apiUrl);
+    if(temp)
+    {
+      for (let obj of temp.cart) {
+        if (!newItem.some((item) => JSON.stringify(item) === JSON.stringify(obj))) {
+          newItem.push(obj);
+        }
       }
+      addTocart([...newItem]);
     }
-    addTocart([...newItem]);
-   }
-   postCart({eamal: email} ,newItem,apiUrl);
+    postCart({email: email} ,newItem,apiUrl);
   }
   const updateCartitemquantity =  async () => {  
    await postCart(user , [] , apiUrl);//this to  first clear cart 
@@ -161,7 +161,7 @@ export const UserContext = createContext();
         body: JSON.stringify({email: user.email ,item:newItem}),
         credentials: 'include' 
       });
-      console.log('updated cart :' ,response.ok );
+      console.log('updated cart :' ,response.ok , newItem );
     } 
     catch (error) {
       console.error('Error: server crash or stopped', error);
