@@ -51,7 +51,6 @@ function Checkout() {
       </div>
       <br/>
       <br/>
-      <br/>
       <div className="flex flex-col space-y-4 p-4 flex-grow">
         {cartItems.map((item) => (
           <CartItem
