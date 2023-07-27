@@ -47,8 +47,8 @@ export const UserContext = createContext();
     }
     else
     {
-      if(isAuthenticated)
-      postCart(user , [...newItem ,{...item , quantity:1}],apiUrl)
+      if(isAuthenticated)// this to ensure only loggedin user can post
+      postCart(user , [...newItem ,{...item , quantity:1}],apiUrl) 
       addTocart([...newItem ,{...item , quantity:1}]);//quantity fiels added this to ensure only item to be add in cart by adding field quantity means if they want but two do not select two just add ome more
       console.log("Added to newItem Cart");
     }
@@ -74,18 +74,23 @@ export const UserContext = createContext();
   
   useEffect(() => {
     fetch(`${apiUrl}/getallproduct`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return res.json();
+      })
       .then(data => {
         // console.log(data);
-        if(data)
         setallItems(data); // Update the state with fetched items
-        else
-        console.error("NO Item Recieved");
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error.message);
       });
-      (async () => {
-        const result = await checkAuthentication(updateUser , addTocart , apiUrl);
-        setAuthentication(result);
-      })();
+   (async () => {
+    const result = await checkAuthentication(updateUser , addTocart , apiUrl);
+     setAuthentication(result);
+    })();
   }, []);
 
   return (

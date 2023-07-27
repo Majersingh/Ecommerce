@@ -4,13 +4,13 @@ import Mcard from './mobilecard.js'
 import { UserContext } from '../App';
 
 const MemoizedMcard = memo(Mcard);
-
+let c=0;
 function Searchsuggestion() {
- 
+  console.log(c++)
   const navigate = useNavigate();
   const { newItem , allItems ,apiUrl} = useContext(UserContext);
-  const [items, setItems] = useState();
-  const [intent, setIntent] = useState();
+  const [items, setItems] = useState([]);
+  const [intent, setIntent] = useState({});
   const [showFilter, setShowFilter] = useState(false);
   const [isSearching, setSearching] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
@@ -77,7 +77,7 @@ function Searchsuggestion() {
       console.log("Similar Products: found");
       setItems([targetProduct , ...similarProducts]);
     } 
-    else if (intent){
+    else if (intent.intent){
       var range = intent.range?intent.range[0]/80:10000000;
       const similarProducts = allItems.filter((item) =>((item.category.includes(intent.intent) && item.price <=range ) || item.brand.includes(intent.brand))) 
       console.log("Similar Products found");
@@ -86,14 +86,14 @@ function Searchsuggestion() {
     else  {
       console.log("Please search relevant");
     }
-  },[intent ,allItems , location.state.q]);
+    
+  },[ intent , location.state.q , allItems]);
   
   useEffect(() => {
      (async ()=>{
       try {
         const response = await fetch(`${apiUrl}/parsedquery?query=${location.state.q}`);
         const data = await response.json();
-        setItems(allItems)
         if (Object.keys(data).length !== 0|| true) {
           console.log(data);
           setIntent(data);
@@ -104,7 +104,7 @@ function Searchsuggestion() {
       }
    })();
         
-  }, [location.state.q  ,apiUrl ,allItems]);
+  }, [location.state.q  ,apiUrl ]);
 
     if(isSearching)
     return (
