@@ -20,6 +20,7 @@ export const UserContext = createContext();
   const [user, setUser] = useState();
   const [isAuthenticated, setAuthentication] = useState(false);
   const [newItem, addTocart] = useState([]); //newitem i.e added in cart
+  const [wishList, addWishlist] = useState([]); //newitem i.e added in cart
   const [allItems, setallItems] = useState([]);
   
   const updateUser = (newUser) => {
@@ -67,6 +68,7 @@ export const UserContext = createContext();
     }
     postCart({email: email} ,newItem,apiUrl);
   }
+
   const updateCartitemquantity =  async () => {  
    await postCart(user , [] , apiUrl);//this to  first clear cart 
    await postCart(user , newItem , apiUrl);//then reset db cart as per updated cart to set current quantity
@@ -95,29 +97,30 @@ export const UserContext = createContext();
 
   return (
     <BrowserRouter>
-      <UserContext.Provider value={{apiUrl, user,updateCartitemquantity ,updateCartafterlogin, updateUser, handleLogout ,handleLogin  , updateCart , newItem , allItems , isAuthenticated}}>
+      <UserContext.Provider value={{apiUrl, user,updateCartitemquantity ,updateCartafterlogin, updateUser, handleLogout ,handleLogin  , updateCart , wishList ,addWishlist, newItem , allItems , isAuthenticated}}>
         <Routes>
-          <Route exact path="/" element={<><MemoizedHome/><Navbtn/><Footer/></>}  replace={true}/>
-          <Route exact path="/login" element={<Login />}  />
+          <Route exact path="/" element={<><MemoizedHome/><Navbtn/></>}  replace={true}/>
+          <Route exact path="/login" element={<Login />}/>
           <Route exact path="/signup" element={<Signup />} />
-          <Route exact path="/search" element={<><Search/> <Footer/></>} />
-          <Route exact path="/product/:requiredItemid" element={<><Product/><Footer/></>} />
-          <Route exact path="/searchsuggestion" element={<><Searchsuggestion/><Footer/></>} />
-          < Route exact path="/categories" element={<>404</>} />
+          <Route exact path="/search" element={<Search/>} />
+          <Route exact path="/product/:requiredItemid" element={<Product/>} />
+          <Route exact path="/searchsuggestion" element={<Searchsuggestion/>} />
+          < Route exact path="/categories" element={<>This Page is under maintainance</>} />
           <Route
-            path="/account"
-            element={isAuthenticated ?<><Profile></Profile><Footer/><Navbtn/></> : <Navigate to="/login"  />}
+           exact path="/account"
+            element={isAuthenticated ?<><Profile/><Navbtn/></> : <Navigate to="/login"  />}
           />
           <Route
-            path="/cart"
+           exact path="/cart"
             element={isAuthenticated ? <Cart /> : <Navigate to="/login"  />}
           />
           <Route
-            path="/checkout"
+           exact path="/checkout"
             element={isAuthenticated ? <Checkout /> : <Navigate to="/login"  />}
           />
           <Route path="*" element={<ErrorPage/>} />
-        </Routes>
+        </Routes> 
+        <Footer/>
       </UserContext.Provider>
     </BrowserRouter>
   );
