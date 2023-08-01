@@ -23,7 +23,7 @@ function Cart() {
     );
     const updateQuantity =  await newItem.find((item) => item._id === itemId);
     if (updateQuantity) {
-      updateQuantity.quantity = newQuantity;
+      updateQuantity.quantity = newQuantity; // using reference property of object
       updateCartitemquantity();
     }
   };
@@ -37,7 +37,7 @@ function Cart() {
     0
   );
   const tax = 0.1 * subtotal;
-  const total = subtotal + tax;
+  const total = subtotal + tax -totalDiscount;
  useEffect(()=>setCartItems(newItem), [newItem]);
   return (
     <div className="flex flex-col min-h-screen bg-slate-100">
@@ -58,10 +58,7 @@ function Cart() {
             onUpdateQuantity={ updateQuantity }
           />
         ))}
-        <button className="mb-2 p-2 text-center bg-white text-black w-full shadow-inner rounded-md">
-          Apply Coupon
-        </button>
-
+        
         <div className="flex justify-center p-4">
           <div className="w-full divide-y">
             <div className="flex justify-between mb-2">

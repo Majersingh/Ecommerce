@@ -80,7 +80,7 @@ function Searchsuggestion() {
     else if (intent.intent){
       var range = intent.range?intent.range[0]/80:10000000;
       const similarProducts = allItems.filter((item) =>((item.category.includes(intent.intent) && item.price <=range ) || item.brand.includes(intent.brand))) 
-      console.log("Similar Products found");
+      console.log("Similar Products found", similarProducts);
       setItems(similarProducts);
     }
     else  {

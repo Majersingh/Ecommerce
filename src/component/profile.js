@@ -1,5 +1,6 @@
 import React from 'react';
 import {useContext} from "react";
+import { Link} from 'react-router-dom';
 import { UserContext } from "../App";
 
 const Profile = () => {
@@ -9,11 +10,12 @@ const Profile = () => {
       <h1 className="text-3xl font-bold text-center my-4">User Profile</h1>
 
       <div className="grid grid-cols-2 gap-4">
-        <section className="bg-white rounded-lg p-4">
-          <h2 className="text-xl font-bold mb-4">My Orders</h2>
-          {/* Add your order-related content */}
-        </section>
-
+        {<Link to='/myorders'>
+          <section className="bg-white rounded-lg p-4">
+            <h2 className="text-xl font-bold mb-4">My Orders</h2>
+            {/* Add your order-related content */}
+          </section>
+        </Link>}
         <section className="bg-white rounded-lg p-4">
           <h2 className="text-xl font-bold mb-4">My Wishlist</h2>
           {/* Add your wishlist-related content */}

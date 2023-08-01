@@ -81,7 +81,9 @@ const ProductDescription = () => {
           >
             {removeOrAdd}
           </button>
-          <button className="w-1/2 bg-[#5e11c2] text-white font-semibold p-2">Buy Now</button>
+          <Link to='/buynow' state={desiredItem} >
+            <button className="w-1/2 bg-[#5e11c2] text-white font-semibold p-2">Buy Now</button>
+          </Link>
         </div>
       </div>
     );

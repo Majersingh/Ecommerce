@@ -1,7 +1,7 @@
 function Footer(){
     return (
         <>
-         <footer className="mb-[5vh] bg-gray-900 text-white">
+         <footer className=" bg-gray-900 text-white">
             <div className="container mx-auto py-8">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 p-2">
                 <div>
@@ -36,7 +36,6 @@ function Footer(){
                 </div>
             </div>
         </footer>
-
         </>
     )
 }

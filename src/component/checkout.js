@@ -1,13 +1,16 @@
 import { Link , useNavigate } from "react-router-dom";
 import { useState, useContext , useEffect } from "react";
 import Address from './address.js'
+import myImage from './tick.png'
 import { UserContext } from "../App";
 
 function Checkout() {
-  const { newItem, updateCart , updateCartitemquantity } = useContext(UserContext);
+  const { newItem, updateCart , updateCartitemquantity  , user , apiUrl} = useContext(UserContext);
   const [cartItems, setCartItems] = useState([...newItem]);
   const [address, setAddress] = useState({addressLine1:"Please Edit"});
   const [isTochangeaddress, setisTochangeAddress] = useState(false);
+  const [useCoins , setUsecoins] =useState(false);
+  const [isorderPlaced , setOrderstatus]=useState(0);
   const navigate = useNavigate();
 
   const removeItem = (itemId) => {
@@ -30,6 +33,32 @@ function Checkout() {
       updateCartitemquantity();
     }
   };
+
+  const handleorder= async()=>{
+    try {
+      setOrderstatus(1);
+      const response = await fetch(`${apiUrl}/addmyorder`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({email: user.email ,item:[...newItem],}),
+        credentials: 'include' 
+      });
+      if(response.ok)
+      { 
+        setOrderstatus("ok");
+        for(let itm of newItem)
+        user.myorders.unshift(itm);
+        updateCart({}, true);
+        console.log('My Order Placed :' ,response.ok);
+      }
+    } 
+    catch (error) {
+      setOrderstatus(0);
+      console.error('Error: to Post Order', error);
+    }
+  }  
  
   const subtotal = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -40,12 +69,27 @@ function Checkout() {
     0
   );
   const tax = 0.1 * subtotal;
-  const total = subtotal + tax;
+
+  let total = subtotal + tax -totalDiscount;
+
+  let coinsValue=500;
+  let coinsDiscount = useCoins ? coinsValue : 0;
+
+  if (coinsDiscount > total) {
+    coinsDiscount = total;
+    total = 0;
+  }
+  else total= total-coinsDiscount;
+  
   useEffect(()=>setCartItems(newItem), [newItem]);
+  if(cartItems)
   return (
     <div className="flex flex-col min-h-screen bg-slate-100">
       <div className="fixed w-full shadow-xl flex items-center justify-between bg-slate-300 p-4">
-        <i className="fa-solid fa-arrow-left fa-xl" onClick={()=>{navigate(-1)}}></i>
+        <i className="fa-solid fa-arrow-left fa-xl" onClick={()=>{navigate(-1)}}> </i>
+        <Link to={'/'}>
+           <i className="fa-brands fa-shopify fa-xl"></i>
+        </Link>
         <p>Order summary</p>
         <p className="">Step 2/3</p>
       </div>
@@ -85,6 +129,14 @@ function Checkout() {
               <span className="">&#8377;{tax.toFixed(2)}</span>
             </div>
             <div className="flex justify-between mb-2">
+              <span className="text-black">Used Coins:</span>
+              <span className="text-green-600">-{useCoins?coinsDiscount:0}</span>
+            </div>
+            <div className="flex justify-between mb-2">
+              <span className="text-black">Discount:</span>
+              <span className="text-green-600">-{totalDiscount.toFixed(0)}</span>
+            </div>
+            <div className="flex justify-between mb-2">
               <span className="text-black">Deliver fees:</span>
               <span className="text-green-600">free</span>
             </div>
@@ -93,21 +145,43 @@ function Checkout() {
               <span className="font-bold">&#8377;{total.toFixed(2)}</span>
             </div>
             <div className="mb-2 p-2 text-center text-green-600 bg-green-100 w-full">
-              Total saving: &#8377; {parseInt(totalDiscount)}
+              Total saving: &#8377; {parseInt(totalDiscount + coinsDiscount)}
             </div>
           </div>
         </div>
+        <button className="mb-2 p-2  text-center bg-white text-black  shadow-lg rounded-md">
+          Apply Coupon
+        </button>
+        <div className=' flex items-center space-x-2 p-2 bg-white shadow-lg rounded '>
+            <p className=''>Use from your coins : <span>{coinsValue}</span></p>
+            <input type='checkbox'  onChange={() => setUsecoins(!useCoins)} className='w-4 h-4' />
+        </div>
       </div>
-
-      <div className="flex w-full p-4">
-
-          <Link
-          to="/"
-          className="bg-green-600 text-center w-full text-white font-semibold py-2 px-4 rounded"
-          >
-          Place Order
-          </Link>
+      
+      <div className="m-4">
+        <button className={`${isorderPlaced==="ok"?'bg-white':'bg-green-600'} text-center w- text-white font-semibold py-2 w-full rounded`} onClick={handleorder} >
+        {
+          isorderPlaced>0?
+          <span className="flex items-center justify-center">
+            <span className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></span>
+          </span>:<>Place Order</>
+        }
+        </button>
       </div>
+      <div className={`fixed p-4 inset-0 flex flex-col items-center justify-center z-50 bg-opacity-50 backdrop-filter backdrop-blur-sm transition-opacity ${
+            isorderPlaced==="ok" ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}>
+             <img src={myImage} alt="" className='opacity-80 rounded-full'/>
+             <p className='font-bold text-green-600'>Order Placed Successfully</p>
+             <div className='flex justify-between w-80 p-1 bg-green-600 font-bold divide-x-2 rounded'>
+              {
+                <Link to='/myorders'><button className=' text-white  w-40'>View</button></Link>
+              }
+              {
+                <Link to='/'><button className=' text-white  w-40'>Explore</button></Link>
+              }
+             </div>
+        </div>
     </div>
   );
 }
@@ -158,7 +232,7 @@ function CartItem({ item, onRemove, onUpdateQuantity }) {
       <button
         className="mt-1 bg-violet-100 text-black hover:bg-violet-300 shodow-inner w-full"
         onClick={onRemove}
-      >
+        >
         Remove
       </button>
     </div>

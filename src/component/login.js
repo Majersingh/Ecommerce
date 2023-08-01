@@ -3,7 +3,7 @@ import {Link  , useNavigate} from 'react-router-dom';
 import { UserContext } from "../App";
 
 const Login = () => {
-  const { handleLogin , isAuthenticated , updateUser ,updateCartafterlogin, apiUrl} = useContext(UserContext);
+  const { isAuthenticated ,updateafterlogin, apiUrl} = useContext(UserContext);
   const[ email , setEmail]=useState('');
   const[ password , setPassword]=useState('');
   const[ isLoggedin , setLoggedin]=useState(0); //-1 for wrong idpass  -2 for emty req and 1 for inloading state n 0 for default state
@@ -15,7 +15,7 @@ const Login = () => {
     if(!(email && password))
     { 
       setLoggedin(-2);
-      setTimeout(()=>setLoggedin(0),500);
+      setTimeout(()=>setLoggedin(0),300);
       return; // this to prevent further execution
     }
     try {
@@ -32,14 +32,12 @@ const Login = () => {
       if (response.status !== 200) {
         console.log("Login Failed");
         setLoggedin(-1);
-        setTimeout(()=>setLoggedin(0),500);
+        setTimeout(()=>setLoggedin(0),5000);
       }
       else if(response.status ===200)
       { 
         console.log('Response:', "Logged in Successfully");
-        handleLogin({isAuthenticated:true});
-        await updateUser({email:email});
-        updateCartafterlogin(email);
+        updateafterlogin(email);
       }
     } 
     catch (error) {
@@ -47,7 +45,7 @@ const Login = () => {
     }
   }    
  if(isAuthenticated)
- navigate(-1);
+ navigate(-1);// this rdirect from where login come
  
   return (
     <div className='bg-slate-100'>
@@ -98,7 +96,7 @@ const Login = () => {
               "Log In"
             }
          </button>
-        {isLoggedin===-1?<p className='text-red-600'>Wrong Password</p>:<></>}
+        {isLoggedin===-1?<p className='text-red-600'>Wrong E-mail Or Password</p>:<></>}
         {isLoggedin===-2?<p className='text-red-600'>Enter Email & Password</p>:<></>}
         <p className="text-sm text-gray-600 mt-2">
           Don't have an account? {<Link to={'/signup'} className='text-blue-500'>Sign Up</Link>}

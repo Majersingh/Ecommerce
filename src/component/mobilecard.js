@@ -60,8 +60,8 @@ function Mcard(props){
                     <i className ={`${isLike?'fa-solid text-red-600':'fa-regular'} fa-heart fa-lg`} onClick={handleWishlist}></i>
                 </div>
                 <button className="w-1/2 bg-[#848187] text-white p-1" onClick={handleCart}>{cartState}</button>
-                <Link to={'/checkout'} >
-                <button className="w-1/2 bg-[#5e11c2] text-white p-1">Buy Now</button>
+                <Link to='/buynow' state={props.item} >
+                  <button className="w-1/2 bg-[#5e11c2] text-white p-1">Buy Now</button>
                 </Link>
           </div>
         </div>
