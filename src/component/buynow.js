@@ -40,7 +40,7 @@ const Buynow = () => {
       }
   }
 
-  let coinsValue=user?user.coins :0;
+  let coinsValue=user?user.mycoins : 0;
   const subtotal =item.price *item.quantity;
   const totalDiscount = (item.price * item.quantity*item.discountPercentage)/100;
   const tax = 0.1 * subtotal;
