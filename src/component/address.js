@@ -1,6 +1,8 @@
-import React, { useState} from 'react';
+import React, { useState , useContext} from 'react';
+import { UserContext } from '../App';
 
 const AddressForm = (props) => {
+  const {user ,apiUrl} = useContext(UserContext);
   const [formData, setFormData] = useState({
     addressLine1: '',
     city: '',
@@ -26,6 +28,8 @@ const AddressForm = (props) => {
       console.log('Enter all fields');
       return;
     } else {
+      if(user.email)
+      postAddress();
       props.setAddress(formData);
       props.setisTochangeaddress(false);
       console.log('Address Changed');
@@ -42,6 +46,22 @@ const AddressForm = (props) => {
       isFormSubmitted && formData[fieldName] === '' ? 'border-red-600' : 'border-gray-300'
     } rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors`;
   };
+  async function postAddress(){
+    try {
+      const response = await fetch(`${apiUrl}/addaddress`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({email: user.email , address:formData}),
+        credentials: 'include' 
+      });
+      console.log('updated Adress :' ,response.ok );
+    } 
+    catch (error) {
+      console.error('Error: to Post Adreees', error);
+    }
+  }
 
   return (
     <div className={`fixed p-4 inset-0 flex items-center justify-center z-50 bg-opacity-50 backdrop-filter backdrop-blur-sm transition-opacity ${

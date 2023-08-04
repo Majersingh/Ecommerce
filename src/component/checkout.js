@@ -7,11 +7,14 @@ import { UserContext } from "../App";
 function Checkout() {
   const { newItem, updateCart , updateCartitemquantity  , user , apiUrl} = useContext(UserContext);
   const [cartItems, setCartItems] = useState([...newItem]);
-  const [address, setAddress] = useState({addressLine1:"Please Edit"});
   const [isTochangeaddress, setisTochangeAddress] = useState(false);
   const [useCoins , setUsecoins] =useState(false);
   const [isorderPlaced , setOrderstatus]=useState(0);
   const navigate = useNavigate();
+  
+  const setAddress=(address)=>{
+   user.address=address;
+  }
 
   const removeItem = (itemId) => {
     setCartItems((prevItems) => prevItems.filter((item) => item._id !== itemId));
@@ -35,22 +38,24 @@ function Checkout() {
   };
 
   const handleorder= async()=>{
+    if(newItem.length > 0) //to make sure something then only order placed
     try {
       setOrderstatus(1);
+      const orderid =  new Date().getTime();
       const response = await fetch(`${apiUrl}/addmyorder`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({email: user.email ,item:[...newItem],}),
+        body: JSON.stringify({email: user.email ,order:{item:[...newItem] , orderid: orderid, mobile:user.mobileNumber}}),
         credentials: 'include' 
       });
       if(response.ok)
       { 
         setOrderstatus("ok");
-        for(let itm of newItem)
-        user.myorders.unshift(itm);
-        updateCart({}, true);
+        if(user.myorders)
+        user.myorders.unshift({orderitem:[...newItem] , orderid: orderid, mobile:user.mobileNumber});
+        updateCart({}, true); // here to clear cart when order placed 
         console.log('My Order Placed :' ,response.ok);
       }
     } 
@@ -72,7 +77,7 @@ function Checkout() {
 
   let total = subtotal + tax -totalDiscount;
 
-  let coinsValue=500;
+  let coinsValue=user.mycoins ? user.mycoins :0;
   let coinsDiscount = useCoins ? coinsValue : 0;
 
   if (coinsDiscount > total) {
@@ -115,7 +120,7 @@ function Checkout() {
             </button>
             {isTochangeaddress ?<Address setAddress={setAddress}  setisTochangeaddress={setisTochangeAddress}/>:<></>}
           </h2>
-          <p className="leading-tight">{address.addressLine1} , {address.city ?address.pincode +","+address.city+","+address.state:"" }</p>
+          {user.address ?<p className="leading-tight">{user.address.addressLine1} , {user.address.city ?user.address.pincode +","+user.address.city+","+user.address.state:"" }</p>:<>Please Edit</>}
         </div>
 
         <div className="flex justify-center p-2">
@@ -149,9 +154,12 @@ function Checkout() {
             </div>
           </div>
         </div>
-        <button className="mb-2 p-2  text-center bg-white text-black  shadow-lg rounded-md">
-          Apply Coupon
-        </button>
+
+        <select className="p-2 text-center bg-white text-black  shadow-lg rounded">
+         <option defaultValue={'Apply Coupon'} >Apply Coupon</option>
+         <option disabled>No Coupon</option>
+        </select>
+
         <div className=' flex items-center space-x-2 p-2 bg-white shadow-lg rounded '>
             <p className=''>Use from your coins : <span>{coinsValue}</span></p>
             <input type='checkbox'  onChange={() => setUsecoins(!useCoins)} className='w-4 h-4' />
@@ -159,7 +167,7 @@ function Checkout() {
       </div>
       
       <div className="m-4">
-        <button className={`${isorderPlaced==="ok"?'bg-white':'bg-green-600'} text-center w- text-white font-semibold py-2 w-full rounded`} onClick={handleorder} >
+        <button className={`${isorderPlaced==="ok"?'bg-white':'bg-green-600'} text-center w- text-white font-semibold py-2 w-full rounded `}  onClick={handleorder} >
         {
           isorderPlaced>0?
           <span className="flex items-center justify-center">

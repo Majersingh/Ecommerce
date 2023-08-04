@@ -12,23 +12,25 @@ const Buynow = () => {
   const [isorderPlaced , setOrderstatus] =useState(0);
   const item ={...location.state , quantity:quantity};
   const navigate = useNavigate();
-  
+  console.log(user)
   const handleorder= async()=>{
     
       try {
-        setOrderstatus(1);
+        setOrderstatus(1)
+        const orderid = new Date().getTime();
         const response = await fetch(`${apiUrl}/addmyorder`, {
-          method: 'POST',
+          method: 'PUT',
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({email: user.email ,item:[item],}),
+          body: JSON.stringify({email: user.email ,order:{item:[item] , orderid: orderid, mobile:user.mobileNumber}}),
           credentials: 'include' 
         });
         if(response.ok)
         {
           setOrderstatus("ok");
-          user.myorders.unshift(item);
+          if(user.myorders)
+          user.myorders.unshift({orderitem:[item] , orderid: orderid, mobile:user.mobileNumber});
           console.log('My Order Placed :' ,response.ok);
         }
       } 
@@ -38,7 +40,7 @@ const Buynow = () => {
       }
   }
 
-  let coinsValue=500;
+  let coinsValue=user?user.coins :0;
   const subtotal =item.price *item.quantity;
   const totalDiscount = (item.price * item.quantity*item.discountPercentage)/100;
   const tax = 0.1 * subtotal;
@@ -121,7 +123,7 @@ const Buynow = () => {
         </div>
 
         <select className=" p-2  text-center bg-white text-black  shadow-lg rounded m-4">
-         <option selected >Apply Coupon</option>
+         <option defaultValue={'Apply Coupon'} >Apply Coupon</option>
          <option disabled>No Coupon</option>
         </select>
 
@@ -140,6 +142,7 @@ const Buynow = () => {
           }
           </button>
         </div>
+        {/* order successfull msg */}
         <div className={`fixed p-4 inset-0 flex flex-col items-center justify-center z-50 bg-opacity-50 backdrop-filter backdrop-blur-sm transition-opacity ${
             isorderPlaced==="ok" ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}>

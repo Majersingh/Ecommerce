@@ -1,38 +1,54 @@
 import React from 'react';
-import {useContext} from "react";
+import {useContext , useState} from "react";
 import { Link} from 'react-router-dom';
 import { UserContext } from "../App";
+import Address from "./address";
 
 const Profile = () => {
-  const { apiUrl} = useContext(UserContext);
+  const { apiUrl , user} = useContext(UserContext);
+  const [isTochangeaddress, setisTochangeAddress] = useState(false);
+  const setAddress=(address)=>{
+    user.address=address;
+   }
+   
   return (
-    <div className="container mx-auto p-8 bg-slate-400/25 shadow-lg">
-      <h1 className="text-3xl font-bold text-center my-4">User Profile</h1>
-
-      <div className="grid grid-cols-2 gap-4">
-        {<Link to='/myorders'>
-          <section className="bg-white rounded-lg p-4">
-            <h2 className="text-xl font-bold mb-4">My Orders</h2>
+    <div className="container mx-auto  bg-slate-400/25">
+      <h1 className="fixed  text-center p-2  shadow-lg  w-full ">Welcome {user.name && user.name.split(" ")[0]}</h1>
+      <br/>
+      <div className="mt-8 flex flex-wrap justify-between w-full p-4 ">
+        {/* My Orders Section */}
+        <Link to="/myorders">
+          <section className="bg-white rounded-lg h-[10vh] m-2 p-4">
+            <h2 className="text-md">My Orders</h2>
             {/* Add your order-related content */}
           </section>
-        </Link>}
-        <section className="bg-white rounded-lg p-4">
-          <h2 className="text-xl font-bold mb-4">My Wishlist</h2>
-          {/* Add your wishlist-related content */}
+        </Link>
+
+        {/* Credit Points Section */}
+        <section className="bg-white rounded-lg h-[10vh] m-2 p-4">
+          <h2 className="text-md">My Coins</h2>
+          {parseInt(user.mycoins) !==0 ? user.mycoins:<p className='text-xs font-thin'>No Coin</p>}
         </section>
 
-        <section className="bg-white rounded-lg p-4">
-          <h2 className="text-xl font-bold mb-4">Saved Addresses</h2>
-          {/* Add your saved address-related content */}
-        </section>
-
-        <section className="bg-white rounded-lg p-4">
-          <h2 className="text-xl font-bold mb-4">Credit Points</h2>
-          {/* Add your credit points-related content */}
+        {/* Shipping Address Section */}
+        <section className="grow bg-white rounded-lg p-2 m-2">
+            Shipping Address:{" "}
+            <button
+              className="w-12  bg-white border rounded-lg p-1 text-sm font-medium shadow-l text-[#5e11c2]"
+              onClick={() => setisTochangeAddress(true)}
+            >
+              Edit
+            </button>
+            {isTochangeaddress ? <Address setAddress={setAddress} setisTochangeaddress={setisTochangeAddress} /> : <></>}
+            {user.address ? (
+              <p className="leading-tight break-all">{user.address.addressLine1}, {user.address.city ? user.address.pincode + "," + user.address.city + "," + user.address.state : ""}</p>
+            ) : (
+              <>Please Edit</>
+            )}
         </section>
       </div>
 
-      <button className="w-full bg-red-500 text-white py-2 px-4 rounded mt-4" onClick={
+      <button className="w-[88vw] bg-red-500 text-white py-2 rounded m-4" onClick={
         ()=>{
         fetch(`${apiUrl}/logout`, { method: 'POST' ,credentials: 'include' })
         .then(response => {
@@ -44,8 +60,7 @@ const Profile = () => {
         })
         .catch(error => {
             console.error('Error:', error);
-        });
-}}>Logout</button>
+        });}}>Logout</button>
     </div>
   );
 };

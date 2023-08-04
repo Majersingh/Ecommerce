@@ -12,7 +12,7 @@ import { UserContext } from '../App';
       setMyorders(user.myorders)
     },[user]
     );
-    
+     
     if(myOrders)
     return(
     <div className='divide-y'>
@@ -34,17 +34,16 @@ import { UserContext } from '../App';
  }
 
  function List({item}){
-    return (<div className='flex items-center justify-between p-2'>
-        {<Link to={'/product/'+item._id}>
-            <img
-                src={item.images[0]}
-                alt="Product"
-                className="w-32  h-auto object-contain"
-                />
-        </Link>}
+  const date = new Date(item.orderid);
+    return (<div className='flex items-center justify-between pr-6'>
+        <img
+            src={item.orderitem[0].images[0]}
+            alt="Product"
+            className="w-32  h-auto object-contain"
+            />
         <div>
-            <h3 className="font-bold text-gray-800">{item.title}</h3>
-            <p className="text-gray-600">{item.price.toFixed(2)}</p>
+            <h3 className="font-bold w-32 text-gray-800 truncate ...">{item.orderid}</h3>
+            <p className="text-gray-600">Ordered On :  { date.getDate() + "/"+(parseInt(date.getMonth())+1)+"/" +date.getFullYear()}</p>
             
         </div>
         <p className='font-bold'> &#10093;</p>

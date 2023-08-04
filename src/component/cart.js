@@ -14,7 +14,7 @@ function Cart() {
       updateCart(removedItem);
     }
   };
- console.log(cartItems)
+ 
   const updateQuantity = async (itemId, newQuantity) => {
    setCartItems((prevItems) =>
       prevItems.map((item) =>

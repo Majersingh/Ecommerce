@@ -108,13 +108,16 @@ export const UserContext = createContext();
           <Route exact path="/signup" element={<Signup />} />
           <Route exact path="/search" element={<Search/>} />
           <Route exact path="/product/:requiredItemid" element={<Product/>} />
-          <Route exact path="/buynow" element={<Buynow/>} />
           <Route exact path="/myorders" element={<Myorders/>} />
           <Route exact path="/searchsuggestion" element={<Searchsuggestion/>} />
           < Route exact path="/categories" element={<>This Page is under maintainance</>} />
           <Route
            exact path="/account"
             element={isAuthenticated ?<><Profile/><Navbtn/></> : <Navigate to="/login"  />}
+          />
+          <Route
+           exact path="/buynow"
+            element={isAuthenticated ?<Buynow/> : <Navigate to="/login"  />}
           />
           <Route
            exact path="/cart"
@@ -167,7 +170,7 @@ export const UserContext = createContext();
   async function postCart(user , newItem , apiUrl){
     try {
       const response = await fetch(`${apiUrl}/addtocart`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
