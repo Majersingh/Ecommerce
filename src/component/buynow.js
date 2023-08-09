@@ -1,4 +1,4 @@
-import { Link, useLocation  , useNavigate} from 'react-router-dom';
+import { Link, useLocation  , Navigate , useNavigate} from 'react-router-dom';
 import {  useState , useContext} from 'react';
 import { UserContext } from '../App';
 import myImage from './tick.png';
@@ -12,7 +12,6 @@ const Buynow = () => {
   const [isorderPlaced , setOrderstatus] =useState(0);
   const item ={...location.state , quantity:quantity};
   const navigate = useNavigate();
-  console.log(user)
   const handleorder= async()=>{
     
       try {
@@ -133,7 +132,7 @@ const Buynow = () => {
         </div>
 
         <div className="flex m-4">
-          <button className={`${isorderPlaced==="ok"?'bg-white':'bg-green-600'} text-center w-full text-white font-semibold py-2 px-4 rounded`} onClick={handleorder} >
+          <button  disabled={isorderPlaced ===1} className={`${isorderPlaced==="ok"?'bg-white':'bg-green-600'} text-center w-full text-white font-semibold py-2 px-4 rounded`} onClick={handleorder} >
           {
             isorderPlaced>0?
             <span className="flex items-center justify-center">
@@ -160,6 +159,6 @@ const Buynow = () => {
     </div>
   )
   else
-  return(<>Session Expired</>)
+  return(<Navigate to='/'></Navigate>)
 }
 export default Buynow;

@@ -62,7 +62,7 @@ const ProductDescription = () => {
               </p>
               <p className="text-gray-600">Brand: {desiredItem.brand}</p>
               <p className="text-gray-600">Rating: {desiredItem.rating}</p>
-              <p className="text-green-600">Discount: {desiredItem.discount}% OFF</p>
+              <p className="text-green-600">Discount: {desiredItem.discountPercentage}% OFF</p>
               <div className="border-t border-gray-400 mt-4"></div>
               <h3 className="text-xl font-semibold mt-4">Specifications:</h3>
               <ul className="list-disc list-inside mt-2 text-gray-600">

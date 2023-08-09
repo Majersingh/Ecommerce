@@ -1,4 +1,4 @@
-import { Link , useNavigate } from "react-router-dom";
+import { Link , Navigate, useNavigate } from "react-router-dom";
 import { useState, useContext , useEffect } from "react";
 import Address from './address.js'
 import myImage from './tick.png'
@@ -87,7 +87,7 @@ function Checkout() {
   else total= total-coinsDiscount;
   
   useEffect(()=>setCartItems(newItem), [newItem]);
-  if(cartItems)
+  if(newItem.length >0 || isorderPlaced==='ok')
   return (
     <div className="flex flex-col min-h-screen bg-slate-100">
       <div className="fixed w-full shadow-xl flex items-center justify-between bg-slate-300 p-4">
@@ -167,7 +167,7 @@ function Checkout() {
       </div>
       
       <div className="m-4">
-        <button className={`${isorderPlaced==="ok"?'bg-white':'bg-green-600'} text-center w- text-white font-semibold py-2 w-full rounded `}  onClick={handleorder} >
+        <button disabled={isorderPlaced===1} className={`${isorderPlaced==="ok"?'bg-white':'bg-green-600'} text-center w- text-white font-semibold py-2 w-full rounded `}  onClick={handleorder} >
         {
           isorderPlaced>0?
           <span className="flex items-center justify-center">
@@ -192,6 +192,8 @@ function Checkout() {
         </div>
     </div>
   );
+  else 
+  return (<Navigate to='/'></Navigate>);
 }
 
 function CartItem({ item, onRemove, onUpdateQuantity }) {

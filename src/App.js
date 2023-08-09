@@ -22,7 +22,7 @@ export const UserContext = createContext();
   const [user, setUser] = useState();
   const [isAuthenticated, setAuthentication] = useState(false);
   const [newItem, addTocart] = useState([]); //newitem i.e added in cart
-  const [wishList, addWishlist] = useState([]); //newitem i.e added in cart
+  const [wishList, addWishlist] = useState([]); //newitem i.e added in cart and array is intial to handle error fro mapping when emty
   const [allItems, setallItems] = useState([]);
   
 
@@ -34,7 +34,6 @@ export const UserContext = createContext();
     setAuthentication(false);
     setUser(null);
   };
-  console.log(user);
   const updateCart = async (item , clear) => {
     const itemExists = newItem.some(itm => itm._id === item._id);
     if(itemExists && !clear) // if include then remove
@@ -110,7 +109,7 @@ export const UserContext = createContext();
           <Route exact path="/product/:requiredItemid" element={<Product/>} />
           <Route exact path="/myorders" element={<Myorders/>} />
           <Route exact path="/searchsuggestion" element={<Searchsuggestion/>} />
-          < Route exact path="/categories" element={<>This Page is under maintainance</>} />
+          < Route exact path="/categories" element={<>This Page is under maintainance <Navbtn/></>} />
           <Route
            exact path="/account"
             element={isAuthenticated ?<><Profile/><Navbtn/></> : <Navigate to="/login"  />}
