@@ -151,8 +151,7 @@ const Signup = () => {
     </div>
 </>
   );
-  else if(isSignup === 1)
-  return(<Navigate to={'/'}/>)
+  else  window.location.replace(`/`);
   
 };
 
