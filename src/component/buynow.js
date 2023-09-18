@@ -89,6 +89,7 @@ const Buynow = () => {
             </div>
       </div>
       <br/>
+      
       <div className="flex justify-center m-4">
           <div className="w-full divide-y">
             <div className="flex justify-between mb-2">
