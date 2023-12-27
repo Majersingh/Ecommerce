@@ -16,7 +16,8 @@ import Searchsuggestion from './component/searchsuggestion.js'
 export const UserContext = createContext();
  
  const MemoizedHome = memo(Home);//// This is to avoid re-rendering on parent's component state changes
- const apiUrl=process.env.REACT_APP_API_URL;
+ // const apiUrl=process.env.REACT_APP_API_URL;
+ const apiUrl='https://ecombackend-production-f29f.up.railway.app';
 
   const App = () => {
   const [user, setUser] = useState();
